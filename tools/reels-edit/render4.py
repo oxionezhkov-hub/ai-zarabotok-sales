@@ -75,7 +75,7 @@ tA=tw("сделай")-0.05
 add(["-framerate","30","-i","build/A/%04d.png"],"cA",tA,3.4,int(130*SC),int(1004*SC),baked=True)
 tB=tw("синий")-1.4
 add(["-framerate","30","-i","build/B/%04d.png"],"cB",tB,3.6,int(110*SC),int(880*SC),baked=True)
-add(["-framerate","30","-i","build/C/%04d.png"],"cC",CT["start"],CT["end"]-CT["start"],int(150*SC),int(920*SC),baked=True)
+add(["-framerate","30","-i","build/C/%04d.png"],"cC",CT["start"],CT["end"]-CT["start"],int(70*SC),int(808*SC),baked=True)
 tD=tw("если",last=True)-0.05
 add(["-loop","1","-framerate","30","-t",f"{tot-tD+0.3:.2f}","-i","build/cardD2.png"],"cD",tD,tot-tD,int(160*SC),int(980*SC),fade_in=0.2,fade_out=0.25)
 fc.append(f"[{cur}]ass=build/subs.ass:fontsdir=/usr/share/fonts/opentype/inter[vout]")
