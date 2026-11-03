@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=540,initial-scale=1">
+<title>Улыбка, стоматология</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;700;800&display=swap">
+<style>
+:root{--btn:#0FA392;--btn2:#38C7B6;--plum:#0F2A33;--mute:#5E7A80;--blush:#EEF8F7;--rose:#D6F0EC;--lav:#DDEFF6;--line:#D3E7E5}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:540px;font-variant-numeric:lining-nums;background:var(--blush);color:var(--plum);font:500 22px/1.45 Manrope,Inter,sans-serif;-webkit-font-smoothing:antialiased}
+header{position:sticky;top:0;z-index:9;display:flex;align-items:center;justify-content:space-between;padding:22px 32px;background:rgba(238,248,247,.92);backdrop-filter:blur(8px)}
+.logo{font:600 34px/1 "Cormorant Garamond",serif;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+.logo i{width:30px;height:30px;border-radius:50% 50% 50% 8%;background:linear-gradient(135deg,var(--btn),#3B82F6);display:block}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--btn);color:#fff;border:0;border-radius:999px;padding:16px 30px;font:800 22px/1 Manrope,sans-serif;box-shadow:0 12px 28px -8px color-mix(in srgb,var(--btn) 70%,transparent);transition:none}
+.btn.sm{padding:12px 22px;font-size:18px}
+.hero{position:relative;padding:36px 32px 64px;overflow:hidden}
+.hero h1{font:600 92px/.95 "Cormorant Garamond",serif;letter-spacing:-.01em;margin:18px 0 22px}
+.hero h1 em{font-style:italic;color:#0FA392}
+.hero p.lead{color:var(--mute);font-size:24px;max-width:400px;margin-bottom:34px}
+.chip{display:inline-flex;gap:10px;align-items:center;background:#fff;border-radius:999px;padding:10px 18px;font:700 18px Manrope;box-shadow:0 6px 18px -8px rgba(80,30,80,.25)}
+.chip b{color:#F5A524}
+.hero>*{position:relative;z-index:1}.hero>.art{z-index:0;position:absolute;right:-110px;top:40px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#D8FBF6,#7FDCCF 55%,#5B9CF0);opacity:.95;z-index:-1}
+.art::after{content:"";position:absolute;inset:60px 90px 40px 40px;border-radius:50% 0 50% 50%;background:rgba(255,255,255,.35);transform:rotate(25deg)}
+.meta{display:flex;gap:26px;margin-top:40px}
+.meta div{font:600 52px/1 "Cormorant Garamond",serif;font-variant-numeric:lining-nums}
+.meta span{display:block;font:500 17px Manrope;color:var(--mute);margin-top:6px}
+section{padding:56px 32px}
+h2{font:600 58px/1 "Cormorant Garamond",serif;margin-bottom:10px}
+.sub{color:var(--mute);font-size:21px;margin-bottom:30px}
+.svc{display:flex;justify-content:space-between;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+.svc b{font:700 26px Manrope}.svc small{display:block;color:var(--mute);font:500 17px Manrope;margin-top:4px}
+.svc span{font:600 34px "Cormorant Garamond",serif;color:var(--btn)}
+.team{display:flex;gap:18px}
+.m{flex:1;text-align:center}
+.m i{display:block;aspect-ratio:1;border-radius:50%;margin-bottom:14px;position:relative;overflow:hidden}
+.m i::after{content:"";position:absolute;left:30%;right:30%;top:24%;bottom:46%;border-radius:50%;background:rgba(255,255,255,.55)}
+.m i::before{content:"";position:absolute;left:12%;right:12%;top:60%;bottom:-20%;border-radius:50% 50% 0 0;background:rgba(255,255,255,.5)}
+.m b{display:block;font:700 20px Manrope}.m span{font-size:16px;color:var(--mute)}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g{border-radius:26px;aspect-ratio:1;position:relative;overflow:hidden}
+.g:nth-child(1){aspect-ratio:1/1.3;grid-row:span 2}
+.g::after{content:"";position:absolute;width:60%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.28);right:-14%;bottom:-14%}
+.rev{background:#fff;border-radius:28px;padding:28px;margin-bottom:16px;box-shadow:0 14px 34px -18px rgba(70,20,70,.3)}
+.rev p{font-size:21px;margin:10px 0 16px}.rev b{font:700 17px Manrope}.rev span{color:var(--mute);font-size:16px}
+.stars{color:#F5A524;font-size:22px;letter-spacing:3px}
+.cta{margin:0 32px 40px;border-radius:40px;padding:50px 34px;background:linear-gradient(135deg,#3B1F4A,#7A3C93);color:#fff}
+.cta h2{font-size:56px;margin-bottom:12px}.cta p{opacity:.8;margin-bottom:28px;font-size:21px}
+footer{padding:10px 32px 70px;color:var(--mute);font-size:18px;display:flex;justify-content:space-between}
+</style></head><body>
+<header><div class="logo"><i></i>Улыбка</div><button class="btn sm" id="b0">Записаться</button></header>
+<div class="hero">
+  <div class="art"></div>
+  <span class="chip"><b>★ 4,8</b> 540 отзывов</span>
+  <h1>Зубы<br>без <em>страха</em></h1>
+  <p class="lead">Лечение, чистка и имплантация. Без боли и без очередей.</p>
+  <button class="btn" id="b1">Записаться</button>
+  <div class="meta"><div>12<span>врачей</span></div><div>10 лет<span>работаем</span></div><div>8 000<span>пациентов</span></div></div>
+</div>
+<section><h2>Услуги</h2><p class="sub">Цены без скрытых доплат</p>
+  <div class="svc"><div><b>Профессиональная чистка</b><small>1 час</small></div><span>от 3 500 ₽</span></div>
+  <div class="svc"><div><b>Лечение кариеса</b><small>от 40 минут</small></div><span>от 4 000 ₽</span></div>
+  <div class="svc"><div><b>Имплантация</b><small>под ключ</small></div><span>от 35 000 ₽</span></div>
+  <div class="svc"><div><b>Отбеливание</b><small>1 час 30 минут</small></div><span>от 12 000 ₽</span></div>
+</section>
+<section style="background:#fff"><h2>Врачи</h2><p class="sub">Стаж от 8 лет</p>
+  <div class="team">
+    <div class="m"><i style="background:linear-gradient(160deg,#BFEFE8,#5FC9BA)"></i><b>Анна</b><span>терапевт</span></div>
+    <div class="m"><i style="background:linear-gradient(160deg,#C9DDFB,#6E9BEB)"></i><b>Игорь</b><span>хирург</span></div>
+    <div class="m"><i style="background:linear-gradient(160deg,#D8F2DD,#77C98A)"></i><b>Ольга</b><span>ортодонт</span></div>
+  </div></section>
+<section><h2>Клиника</h2><p class="sub">Современное оборудование</p>
+  <div class="gal">
+    <div class="g" style="background:linear-gradient(160deg,#A8E8DF,#5B9CF0)"></div>
+    <div class="g" style="background:linear-gradient(160deg,#DFF6F3,#7FDCCF)"></div>
+    <div class="g" style="background:linear-gradient(160deg,#CDE4FF,#8EA8F5)"></div>
+    <div class="g" style="background:linear-gradient(160deg,#E2F1EE,#9AD6CB)"></div>
+    <div class="g" style="background:linear-gradient(160deg,#C8F0E9,#38C7B6)"></div>
+  </div></section>
+<section style="background:var(--rose)"><h2>Отзывы</h2><p class="sub">Пишут сами клиенты</p>
+  <div class="rev"><div class="stars">★★★★★</div><p>Боялась стоматологов с детства. Здесь впервые не было больно и страшно.</p><b>Екатерина</b> <span>лечение</span></div>
+  <div class="rev"><div class="stars">★★★★★</div><p>Записался онлайн, приняли вовремя. Всё объяснили до начала лечения.</p><b>Дмитрий</b> <span>чистка</span></div>
+</section>
+<div style="height:50px"></div>
+<div class="cta"><h2>Запишитесь сегодня</h2><p>Первая консультация бесплатно. Подтвердим запись в мессенджере.</p><button class="btn" id="b2" style="background:#fff;color:var(--plum)">Записаться</button></div>
+<footer><span>ул. Лесная, 8</span><span>ежедневно 9:00–21:00</span></footer>
+</body></html>
