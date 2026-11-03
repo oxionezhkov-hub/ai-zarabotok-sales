@@ -57,7 +57,7 @@ save_seq("T",t0,t1-t0,title_fn,50,948)
 s0=W_("больше")["s"]-0.25;s1=W_("нравится.")["e"]+0.6
 save_seq("S",s0,s1-s0,lines_card("Сервис по подписке",[("Больше 100 человек",0.25),("Платят за подписку",W_("подписку,")["s"]-0.35-s0),("Положительные отзывы",W_("отзывы,")["s"]-0.35-s0)],big=58,gap=86,check=True),50,948)
 # 3 voice message
-v0=W_("открыл")["s"]-0.2;v1=W_("голосовыми.")["e"]+0.5;vt=W_("надиктовал")["s"]-v0 if any(x["w"]=="надиктовал" for x in A) else 1.5
+v0=W_("открыл")["s"]-0.2;v1=W_("голосовыми.")["e"]+0.5;vt=0.45   # bubble appears right after the card, while he says "открыл мою нейросеть"
 def voice_fn(t,D):
     W,H=860,250;c,d=base(W,H)
     d.ellipse((40,30,84,74),fill=(217,119,87,255));d.text((62,52),"*",font=F("ExtraBold",40),fill=WH,anchor="mm")
