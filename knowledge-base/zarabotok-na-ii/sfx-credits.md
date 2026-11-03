@@ -1,18 +1,17 @@
 # Звуки в рилсах: источники и лицензии
 
-Все звуки с Openverse (источник Freesound), только CC0 и CC BY. Файлы лежат в рабочей папке сессии (`sfx/`), в репозиторий не кладём.
+## Ролик «Я не технарь», версия 2
 
-## Ролик «Я не технарь» (черновой монтаж)
+Авторов указывать не нужно.
 
-| Где в ролике | Звук | Автор | Лицензия | Нужно упомянуть автора? |
-|---|---|---|---|---|
-| Склейки (по очереди) | Swipe Whoosh | qubodup | CC0 1.0 | нет. [источник](https://freesound.org/people/qubodup/sounds/60007) |
-| Склейки (по очереди) | Swosh swoosh whoosh air sound | qubodup | CC0 1.0 | нет. [источник](https://freesound.org/people/qubodup/sounds/60026) |
-| Карточка «Сделай сайт…» | Keyboard Typing 001 | ristooooo1 | CC0 1.0 | нет. [источник](https://freesound.org/people/ristooooo1/sounds/539146) |
-| Карточка про цвет кнопки | Menu UI Click 222 | Erokia | CC BY 4.0 | **да.** [источник](https://freesound.org/people/Erokia/sounds/470201) |
-| Карточка с ценой | Ding 1 | greenvwbeetle | CC0 1.0 | нет. [источник](https://freesound.org/people/greenvwbeetle/sounds/241288) |
-| Карточка «Напишите в комментариях» | Notification Sound | yfjesse | CC0 1.0 | нет. [источник](https://freesound.org/people/yfjesse/sounds/235911) |
+| Где в ролике | Звук | Источник | Лицензия |
+|---|---|---|---|
+| Склейки | свист-проход, 3 варианта | сделан программно (`tools/reels-edit/sfx_build2.py`) | без ограничений |
+| Карточка про кнопку | щелчок мыши | сделан программно | без ограничений |
+| Карточка с ценой | звук поступления денег | сделан программно | без ограничений |
+| Карточки с запросом и комментариями | [Keyboard Typing 001](https://freesound.org/people/ristooooo1/sounds/539146), автор ristooooo1 | Freesound через Openverse | CC0 1.0 |
+| Музыка | бит 96 ударов в минуту, бас, клавиши | сделана программно (`tools/reels-edit/music2.py`) | без ограничений |
 
-**Что писать в описании:** `Звук: «Menu UI Click 222» by Erokia (freesound.org/people/Erokia/sounds/470201), CC BY 4.0`
+## История
 
-Музыкальная подложка сгенерирована программно, авторских прав нет.
+В версии 1 были записи с Freesound (qubodup, greenvwbeetle, yfjesse, Erokia). Автор забраковал щелчок, звон и уведомление, а переход попросил заменить. Повторный поиск в Openverse 03.11.2026 не удался: API отвечал таймаутами. Если API заработает стабильно, можно заменить сделанные звуки настоящими записями, но только CC0 или CC BY, и при CC BY указать автора в описании ролика.
