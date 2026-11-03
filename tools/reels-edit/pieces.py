@@ -1,15 +1,15 @@
-# (first source frame, number of frames, zoom); source is 30 fps, audio 48 kHz = 1600 samples per frame
+# (first source frame, number of frames, zoom); 30 fps, audio 48 kHz = 1600 samples per frame
 FPS=30
 PIECES=[
  (301,302,1.0),
- (614,165,1.09),
+ (614,96,1.09),
  (893,90,1.0),
  (1071,217,1.09),
  (1804,117,1.0),
  (2408,233,1.09),
  (2641,267,1.0),
  (2908,228,1.09),
- (3609,143,1.0),
+ (3609,149,1.0),
  (3926,127,1.09),
- (4068,224,1.0),
+ (4068,271,1.0),
 ]

@@ -13,21 +13,34 @@ def tw(word,last=False):
 # ---------- subtitles: groups of three plain white words
 def clean(w): return re.sub(r"[,.:;«»?]","",w)
 FUNC={"и","в","на","с","не","я","а","но","то","что","к","у","о","за","для","по","от","из","до","ни","же","ли","или","как","это","вот"}
+from PIL import ImageFont,Image,ImageDraw
+_F=ImageFont.truetype("/usr/share/fonts/opentype/inter/Inter-ExtraBold.otf",84);_D=ImageDraw.Draw(Image.new("L",(8,8)))
+LIBASS=0.823          # measured: libass width / PIL width for Inter ExtraBold at size 84
+LIMIT=900             # max line width in px at 1080 wide (outline included below)
+def wpx(words): return _D.textlength(" ".join(clean(w["w"]) for w in words),font=_F)*LIBASS+18
 chunks=[];cur=[]
 for x in A:
-    cur.append(x);t=x["w"];L=sum(len(clean(c["w"])) for c in cur)+len(cur)-1
-    end_sent=t.endswith(("?",".","!"))
-    full=len(cur)>=3 or L>=19
-    soft=full and not end_sent and clean(t).lower() in FUNC and len(cur)<5
-    if (end_sent or full) and not soft: chunks.append(cur);cur=[]
+    if cur and (len(cur)>=3 or wpx(cur+[x])>LIMIT):
+        chunks.append(cur);cur=[]
+    cur.append(x)
+    if x["w"].endswith(("?",".","!")): chunks.append(cur);cur=[]
 if cur: chunks.append(cur)
+# do not leave a lone short function word at the end of a line if the next word fits
+i=0
+while i<len(chunks)-1:
+    a,b=chunks[i],chunks[i+1]
+    if len(a)>=2 and clean(a[-1]["w"]).lower() in FUNC and not a[-1]["w"].endswith((",",".","?","!",":")) and wpx(b[:0]+[a[-1]]+b)<=LIMIT and len(b)<=2:
+        b.insert(0,a.pop())
+    i+=1
+WIDTHS=[round(wpx(c)) for c in chunks]
 def ts(t):
     t=max(t,0);h=int(t//3600);m=int(t%3600//60);s=t%60;return f"{h}:{m:02d}:{s:05.2f}"
 ev=[]
 for ci,ch in enumerate(chunks):
     s=ch[0]["s"];nxt=chunks[ci+1][0]["s"] if ci+1<len(chunks) else tot
     e=min(ch[-1]["e"]+0.28,nxt) if ci+1<len(chunks) else min(ch[-1]["e"]+0.28,tot)
-    ev.append(f"Dialogue: 0,{ts(s)},{ts(max(e,s+0.2))},Tik,,0,0,0,,"+" ".join(clean(y["w"]) for y in ch))
+    wd=wpx(ch);fs="" if wd<=LIMIT else "{\\fs%d}"%int(84*LIMIT/wd)
+    ev.append(f"Dialogue: 0,{ts(s)},{ts(max(e,s+0.2))},Tik,,0,0,0,,"+fs+" ".join(clean(y["w"]) for y in ch))
 hdr=f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: {W}
@@ -80,5 +93,5 @@ tD=tw("если",last=True)-0.05
 add(["-loop","1","-framerate","30","-t",f"{tot-tD+0.3:.2f}","-i","build/cardD2.png"],"cD",tD,tot-tD,int(160*SC),int(980*SC),fade_in=0.2,fade_out=0.25)
 fc.append(f"[{cur}]ass=build/subs.ass:fontsdir=/usr/share/fonts/opentype/inter[vout]")
 args+=["-filter_complex",";\n".join(fc),"-map","[vout]","-map","[aout]","-c:v","libx264","-preset","medium","-crf","19","-pix_fmt","yuv420p","-c:a","aac","-b:a","192k","-movflags","+faststart","-frames:v",str(sum(nf for f0,nf,z in PIECES)),OUT]
-print("tot",round(tot,3),"cards",dict(A=round(tA,2),B=round(tB,2),C=round(CT['start'],2),D=round(tD,2),bs=round(bs,2),be=round(be,2)),flush=True)
+print("max subtitle width",max(WIDTHS),"of",LIMIT,"| lines",len(chunks));print("tot",round(tot,3),"cards",dict(A=round(tA,2),B=round(tB,2),C=round(CT['start'],2),D=round(tD,2),bs=round(bs,2),be=round(be,2)),flush=True)
 r=subprocess.run(args,capture_output=True,text=True);print(r.returncode,r.stderr[-1500:])
