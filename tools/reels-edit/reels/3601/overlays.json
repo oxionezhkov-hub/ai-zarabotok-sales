@@ -1,0 +1,56 @@
+[
+ {
+  "kind": "seq",
+  "pattern": "cards/chat/%04d.png",
+  "start": 15.41,
+  "dur": 8.47,
+  "y": 40,
+  "w": 948
+ },
+ {
+  "kind": "seq",
+  "pattern": "cards/maps/%04d.png",
+  "start": 33.24,
+  "dur": 11.26,
+  "y": 40,
+  "w": 948
+ },
+ {
+  "kind": "broll",
+  "pattern": "../build/scrollx/%04d.jpg",
+  "start": 44.6,
+  "dur": 4.6
+ },
+ {
+  "kind": "seq",
+  "pattern": "cards/steps/%04d.png",
+  "start": 49.15,
+  "dur": 5.68,
+  "y": 40,
+  "w": 948
+ },
+ {
+  "kind": "seq",
+  "pattern": "cards/price/%04d.png",
+  "start": 55.44,
+  "dur": 3.55,
+  "y": 40,
+  "w": 808
+ },
+ {
+  "kind": "seq",
+  "pattern": "cards/dm/%04d.png",
+  "start": 60.48,
+  "dur": 8.68,
+  "y": 40,
+  "w": 948
+ },
+ {
+  "kind": "seq",
+  "pattern": "cards/cta/%04d.png",
+  "start": 72.6,
+  "dur": 3.7,
+  "y": 40,
+  "w": 948
+ }
+]
