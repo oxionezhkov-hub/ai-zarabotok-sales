@@ -1,10 +1,10 @@
 # r06-takes v2
 
-Feedback on v1: the first two phrases were unclear. Keep only the third, show the failed takes in B&W, then continue with something useful.
+Правка автора к v1: первые две фразы непонятны. Оставить только третью, неудачные дубли сделать ч/б, потом продолжить фразу и дать пользу.
 
-All pieces come from IMG_3599:
-- takes 1–5 of «Если хотите в этом разобраться…», B&W (BW=[0..4]), counter «Дубль N»;
-- the tip (chunks 28, 30, 43): a dental-clinic site in 10 minutes, from 25,000 ₽ (FL.ru);
-- take 6, the good one, counter «✓ Получилось», closing card.
+Все куски из IMG_3599:
+- дубли 1–5 «Если хотите в этом разобраться…» ч/б (BW=[0..4]), счётчик «Дубль N»;
+- польза (чанки 28, 30, 43): сайт для стоматологии за 10 минут, от 25 000 ₽ (FL.ru);
+- удачный дубль 6, счётчик «✓ Получилось», финальная карточка.
 
-Build: `make_seg.py D 3599 …` → hybrid aligned.json (failed takes come from take_subs, the tip from align.py, the last take from take_subs) → custom counter cards → render6 → mute after the last word (volume 33.14–33.20).
+Сборка: `make_seg.py D 3599 …` → гибридный aligned.json (неудачные дубли из take_subs, польза из align.py, последний дубль из take_subs) → свои карточки счётчика → render6 → тишина после последнего слова (volume 33.14–33.20).
