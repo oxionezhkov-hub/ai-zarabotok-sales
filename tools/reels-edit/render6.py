@@ -1,4 +1,4 @@
-import json,re,subprocess,sys
+import json,re,subprocess,sys,os
 from pieces import PIECES,FPS
 SRC=sys.argv[3]
 RG,BG=float(sys.argv[4]),float(sys.argv[5])   # white-balance gains measured on the white t-shirt
@@ -68,7 +68,7 @@ for i,(f0,nf,z) in enumerate(PIECES):
     zs,ze=(1.00,1.05) if i%2==0 else (1.13,1.08)
     zexpr=f"{zs}+({ze}-{zs})*in/{max(1,nf-1)}"
     fc.append(f"[{i}:v]fps={FPS},trim=end_frame={nf},setpts=PTS-STARTPTS,scale={int(W*1.5)}:{int(H*1.5)}:flags=bicubic,"
-              f"zoompan=z='{zexpr}':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*0.30':d=1:s={W}x{H}:fps={FPS},setsar=1,{grade},format=yuv420p[v{i}]");vi.append(f"[v{i}]")
+              f"zoompan=z='{zexpr}':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*{os.environ.get("ZOOM_Y","0.30")}':d=1:s={W}x{H}:fps={FPS},setsar=1,{grade},format=yuv420p[v{i}]");vi.append(f"[v{i}]")
     fc.append(f"[{i}:a]asetpts=PTS-STARTPTS,atrim=end_sample={nf*1600},asetpts=PTS-STARTPTS,afade=t=in:d=0.012,afade=t=out:st={nf/FPS-0.012:.4f}:d=0.012[a{i}]");ai.append(f"[a{i}]")
 fc.append("".join(vi)+f"concat=n={n}:v=1:a=0[base]")
 voice=("highpass=f=90,equalizer=f=170:t=o:w=1.3:g=-3.5,equalizer=f=330:t=o:w=1.0:g=-2,"
