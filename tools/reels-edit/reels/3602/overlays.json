@@ -3,68 +3,68 @@
   "kind": "seq",
   "pattern": "cards/question/%04d.png",
   "start": 0.15,
-  "dur": 4.27,
+  "dur": 4.13,
   "y": 943,
   "w": 1080
  },
  {
   "kind": "seq",
   "pattern": "cards/step1/%04d.png",
-  "start": 12.06,
-  "dur": 9.62,
+  "start": 9.72,
+  "dur": 7.24,
   "y": 849,
   "w": 1080
  },
  {
   "kind": "seq",
   "pattern": "cards/step2/%04d.png",
-  "start": 22.16,
-  "dur": 6.04,
+  "start": 16.94,
+  "dur": 5.58,
   "y": 931,
   "w": 1080
  },
  {
   "kind": "seq",
   "pattern": "cards/prompt/%04d.png",
-  "start": 28.1,
-  "dur": 5.0,
+  "start": 22.42,
+  "dur": 4.72,
   "y": 978,
   "w": 1126
  },
  {
   "kind": "broll",
   "pattern": "dscrollx/%04d.jpg",
-  "start": 33.1,
-  "dur": 7.34
+  "start": 27.14,
+  "dur": 7.38
  },
  {
   "kind": "seq",
   "pattern": "cards/step3/%04d.png",
-  "start": 41.22,
-  "dur": 8.52,
+  "start": 35.18,
+  "dur": 8.48,
   "y": 931,
   "w": 1080
  },
  {
   "kind": "seq",
   "pattern": "cards/offer/%04d.png",
-  "start": 51.9,
-  "dur": 4.44,
+  "start": 45.4,
+  "dur": 4.24,
   "y": 931,
   "w": 1080
  },
  {
   "kind": "seq",
   "pattern": "cards/price/%04d.png",
-  "start": 58.41,
-  "dur": 3.07,
+  "start": 51.73,
+  "dur": 3.06,
   "y": 835,
   "w": 920
  },
  {
   "kind": "seq",
   "pattern": "cards/hours/%04d.png",
-  "start": 62.87,
+  "start": 56.23,
   "dur": 3.45,
   "y": 1002,
   "w": 806
@@ -72,7 +72,7 @@
  {
   "kind": "seq",
   "pattern": "cards/where/%04d.png",
-  "start": 69.02,
+  "start": 61.78,
   "dur": 4.16,
   "y": 849,
   "w": 1080

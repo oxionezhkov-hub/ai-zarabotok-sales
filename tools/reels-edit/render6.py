@@ -1,5 +1,7 @@
 import json,re,subprocess,sys,os
 from pieces import PIECES,FPS
+import pieces as _p
+AST=getattr(_p,'AST',None);ZR=getattr(_p,'ZR',None);BWS=set(getattr(_p,'BW',[]))
 SRC=sys.argv[3]
 RG,BG=float(sys.argv[4]),float(sys.argv[5])   # white-balance gains measured on the white t-shirt
 SC=float(sys.argv[1]); OUT=sys.argv[2]
@@ -65,11 +67,12 @@ grade=f"colorchannelmixer=rr={RG}:gg=1:bb={BG},eq=contrast=1.04:saturation=0.98"
 vi=[];ai=[]
 for i,(f0,nf,z) in enumerate(PIECES):
     # slow camera move inside every piece: even pieces push in, odd pieces pull out (keeps jump-cut contrast)
-    zs,ze=(1.00,1.05) if i%2==0 else (1.13,1.08)
+    zs,ze=ZR[i] if ZR else ((1.00,1.05) if i%2==0 else (1.13,1.08))
     zexpr=f"{zs}+({ze}-{zs})*in/{max(1,nf-1)}"
     fc.append(f"[{i}:v]fps={FPS},trim=end_frame={nf},setpts=PTS-STARTPTS,scale={int(W*1.5)}:{int(H*1.5)}:flags=bicubic,"
-              f"zoompan=z='{zexpr}':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*{os.environ.get("ZOOM_Y","0.30")}':d=1:s={W}x{H}:fps={FPS},setsar=1,{grade},format=yuv420p[v{i}]");vi.append(f"[v{i}]")
-    fc.append(f"[{i}:a]asetpts=PTS-STARTPTS,atrim=end_sample={nf*1600},asetpts=PTS-STARTPTS,afade=t=in:d=0.012,afade=t=out:st={nf/FPS-0.012:.4f}:d=0.012[a{i}]");ai.append(f"[a{i}]")
+              f"zoompan=z='{zexpr}':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*{os.environ.get("ZOOM_Y","0.30")}':d=1:s={W}x{H}:fps={FPS},setsar=1,{grade}{',hue=s=0' if i in BWS else ''},format=yuv420p[v{i}]");vi.append(f"[v{i}]")
+    off=round(((AST[i] if AST else f0/FPS)-f0/FPS)*48000)   # exact audio start inside the first frame (< 1 frame)
+    fc.append(f"[{i}:a]asetpts=PTS-STARTPTS,aresample=48000,atrim=start_sample={off}:end_sample={off+nf*1600},asetpts=PTS-STARTPTS,afade=t=in:d=0.012,afade=t=out:st={nf/FPS-0.02:.4f}:d=0.02[a{i}]");ai.append(f"[a{i}]")
 fc.append("".join(vi)+f"concat=n={n}:v=1:a=0[base]")
 voice=("highpass=f=90,equalizer=f=170:t=o:w=1.3:g=-3.5,equalizer=f=330:t=o:w=1.0:g=-2,"
        "equalizer=f=2800:t=o:w=1.2:g=5,equalizer=f=5400:t=o:w=1.0:g=4.5,highshelf=f=8000:g=3,"
