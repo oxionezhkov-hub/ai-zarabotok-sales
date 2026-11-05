@@ -1,0 +1,1 @@
+[{"kind": "seq", "pattern": "cards/count/%04d.png", "start": 0.0, "dur": 14.067, "y": 40, "w": 760}, {"kind": "seq", "pattern": "cards/end/%04d.png", "start": 10.3, "dur": 3.767, "y": 930, "w": 900}]
