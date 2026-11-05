@@ -4,6 +4,7 @@
   python3 tg_send.py photo  <cover.jpg> ["<caption html>"]
   python3 tg_send.py copy   "<label>" <text-file>        # one copy-ready block (<pre>)
   python3 tg_send.py text   "<html text>"
+  python3 tg_send.py events                               # collect approvals/edits waiting in the bot (and clear them)
 
 Needs the env var REELS_API_TOKEN (set in the Claude environment settings; same value
 as the worker secret). Videos over 45 MB are re-encoded first (Telegram bot limit is 50 MB).
@@ -39,4 +40,6 @@ elif cmd=="copy":
     curl("send-text",["-H","Content-Type: application/json","--data-binary",json.dumps({"text":text},ensure_ascii=False)])
 elif cmd=="text":
     curl("send-text",["-H","Content-Type: application/json","--data-binary",json.dumps({"text":sys.argv[2]},ensure_ascii=False)])
+elif cmd=="events":
+    curl("events",["-X","POST"])
 else: sys.exit(__doc__)
