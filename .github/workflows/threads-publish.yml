@@ -2,7 +2,7 @@ name: "Threads — публикация по расписанию"
 
 on:
   schedule:
-    - cron: "3,33 * * * *"   # каждые 30 минут, посты стоят на :00 и :30 по Москве
+    - cron: "3,33 * * * *"   # запасной вариант, основной запуск делает Cloudflare Worker (cloudflare/threads-cron)
   workflow_dispatch:
 
 concurrency:
@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}  # свежая версия ветки, а не та, что была в момент запуска
       - name: Опубликовать посты, у которых подошло время
         env:
           THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
@@ -27,4 +29,4 @@ jobs:
           git config user.name "threads-bot"
           git config user.email "threads-bot@users.noreply.github.com"
           git add threads/queue
-          git diff --cached --quiet || (git commit -m "Threads: обновить статусы постов" && git push)
+          git diff --cached --quiet || (git commit -m "Threads: обновить статусы постов" && git pull --rebase && git push)
