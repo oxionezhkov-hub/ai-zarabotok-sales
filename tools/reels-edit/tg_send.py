@@ -6,16 +6,17 @@
   python3 tg_send.py text   "<html text>"
   python3 tg_send.py events                               # collect approvals/edits waiting in the bot (and clear them)
 
-Needs the env var REELS_API_TOKEN (set in the Claude environment settings; same value
-as the worker secret). Videos over 45 MB are re-encoded first (Telegram bot limit is 50 MB).
+Auth: the Claude environment has a network secret for tasktracker.oxion-ezhkov.workers.dev/reels/
+that injects "Authorization: Bearer <REELS_API_TOKEN>" (same value as the worker secret), so no
+token is needed here. If the env var REELS_API_TOKEN is set, it is sent explicitly instead. Videos over 45 MB are re-encoded first (Telegram bot limit is 50 MB).
 Prints the worker's JSON answer (message_id is needed in reels-queue.md)."""
 import html,json,os,subprocess,sys,tempfile
 BASE=os.environ.get("REELS_WORKER","https://tasktracker.oxion-ezhkov.workers.dev")
 TOKEN=os.environ.get("REELS_API_TOKEN","")
 LIMIT=45*1024*1024
 def curl(path,args):
-    if not TOKEN: sys.exit("REELS_API_TOKEN is not set: send the file with SendUserFile instead")
-    r=subprocess.run(["curl","-sS","-m","600","-H",f"Authorization: Bearer {TOKEN}",*args,f"{BASE}/reels/{path}"],capture_output=True,text=True)
+    auth=["-H",f"Authorization: Bearer {TOKEN}"] if TOKEN else []   # otherwise the proxy injects it
+    r=subprocess.run(["curl","-sS","-m","600",*auth,*args,f"{BASE}/reels/{path}"],capture_output=True,text=True)
     print(r.stdout or r.stderr);return r.stdout
 def shrink(src):
     if os.path.getsize(src)<=LIMIT: return src
