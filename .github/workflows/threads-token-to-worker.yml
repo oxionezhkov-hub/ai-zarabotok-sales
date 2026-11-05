@@ -1,0 +1,21 @@
+name: "Threads — передать токен воркеру"
+
+# Одноразово: отправляет секрет THREADS_TOKEN в воркер tasktracker,
+# воркер сохраняет его у себя и дальше продлевает сам.
+on:
+  workflow_dispatch:
+
+jobs:
+  handoff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Отправить токен в воркер
+        env:
+          THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
+        run: |
+          code=$(curl -sS -o resp.json -w '%{http_code}' -X POST \
+            -H 'content-type: application/json' \
+            --data "$(jq -n --arg t "$THREADS_TOKEN" '{token: $t}')" \
+            https://tasktracker.oxion-ezhkov.workers.dev/threads/token)
+          cat resp.json; echo
+          test "$code" = "200"
