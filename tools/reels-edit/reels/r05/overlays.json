@@ -1,0 +1,26 @@
+[
+ {
+  "kind": "seq",
+  "pattern": "cards/before/%04d.png",
+  "start": 1.94,
+  "dur": 7.19,
+  "y": -26,
+  "w": 1080
+ },
+ {
+  "kind": "seq",
+  "pattern": "cards/now/%04d.png",
+  "start": 9.0,
+  "dur": 6.78,
+  "y": -26,
+  "w": 1080
+ },
+ {
+  "kind": "seq",
+  "pattern": "cards/orders/%04d.png",
+  "start": 17.15,
+  "dur": 4.49,
+  "y": -26,
+  "w": 1080
+ }
+]
