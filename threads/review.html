@@ -1,0 +1,180 @@
+<title>Threads: посты на неделю</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: одна колонка ленты как в Threads, сверху липкая сводка со счётчиками и фильтром, посты сгруппированы по дням */
+:root{
+  --bg:#f5f5f3; --card:#ffffff; --fg:#141414; --muted:#6b6b68; --line:#e2e2de;
+  --accent:#3b3bd6; --ok:#17803d; --ok-bg:#e5f4ea; --no:#c0352b; --no-bg:#fbe9e7; --wait:#8a6a00; --wait-bg:#f8f0d6;
+  --f-display:"Unbounded",system-ui,sans-serif; --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101010; --card:#1a1a1a; --fg:#f1f1ee; --muted:#9a9a95; --line:#2c2c2a;
+  --accent:#8f8fff; --ok:#5ccf86; --ok-bg:#16301f; --no:#ff8177; --no-bg:#3a1a17; --wait:#e2c25c; --wait-bg:#33290c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101010; --card:#1a1a1a; --fg:#f1f1ee; --muted:#9a9a95; --line:#2c2c2a;
+  --accent:#8f8fff; --ok:#5ccf86; --ok-bg:#16301f; --no:#ff8177; --no-bg:#3a1a17; --wait:#e2c25c; --wait-bg:#33290c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:640px;margin:0 auto}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:20px 12px;border-bottom:1px solid var(--line)}
+h1{font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:-.01em;margin:0 0 4px;text-wrap:balance}
+.sub{color:var(--muted);margin:0 0 12px;font-size:14px}
+.stats{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--fg);font:inherit;font-size:13px;font-weight:500;
+  padding:5px 12px;border-radius:999px;cursor:pointer;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{margin:12px 0 0;font-size:13px;color:var(--muted)}
+.day{margin-top:28px}
+.day-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.day-head h2{font-family:var(--f-display);font-weight:500;font-size:16px;margin:0}
+.day-head .theme{color:var(--muted);font-size:13px}
+.link{background:none;border:0;color:var(--accent);font:inherit;font-size:13px;font-weight:500;cursor:pointer;padding:2px 0}
+.list{display:flex;flex-direction:column;gap:10px}
+.post{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.post[data-status="approved"]{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.post[data-status="rejected"]{opacity:.72}
+.meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.time{font-family:var(--f-mono);font-size:13px;color:var(--fg)}
+.badge{font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;margin-left:auto}
+.badge.pending{background:var(--wait-bg);color:var(--wait)}
+.badge.approved{background:var(--ok-bg);color:var(--ok)}
+.badge.rejected{background:var(--no-bg);color:var(--no)}
+.badge.published{background:var(--ok-bg);color:var(--ok)}
+.text{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;font-size:15.5px}
+.text.edited{border-left:3px solid var(--accent);padding-left:10px}
+textarea{width:100%;font:inherit;font-size:14px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;resize:vertical;min-height:40px}
+.edit-area{min-height:120px;font-size:15px}
+.count{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-align:right}
+.count.over{color:var(--no)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{font:inherit;font-size:14px;font-weight:600;border-radius:10px;padding:7px 14px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.btn.ok[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--card)}
+.btn.no[aria-pressed="true"]{background:var(--no);border-color:var(--no);color:var(--card)}
+.btn.ghost{border-color:transparent;color:var(--muted);font-weight:500}
+.btn:disabled{opacity:.5;cursor:default}
+.saved{font-size:12px;color:var(--muted);margin-left:auto}
+.empty{margin-top:40px;padding:24px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:no-preference){.post{transition:border-color .2s,opacity .2s}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Threads: посты на неделю</h1>
+    <p class="sub">6–12 ноября · 10 постов в день по московскому времени · ведём к обсуждению, без ссылок</p>
+    <div class="stats" id="filters" role="group" aria-label="Фильтр по статусу"></div>
+  </header>
+  <p class="note" id="note">Загружаю посты…</p>
+  <main id="feed"></main>
+</div>
+
+<script>
+const STATUS={pending:"Ждёт",approved:"Одобрен",rejected:"Отклонён",published:"Опубликован",missed:"Пропущен"};
+const DAYS=["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"];
+const MONTHS=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+let posts=[], filter="all", db=null, canWrite=true, editing=new Set();
+const busy=new Map();
+
+function dayLabel(iso){const d=new Date(iso+"T12:00:00+03:00");return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}, ${DAYS[d.getUTCDay()]}`}
+
+function renderFilters(){
+  const c={all:posts.length,pending:0,approved:0,rejected:0};
+  posts.forEach(p=>{const s=p.status==="published"?"approved":p.status;if(c[s]!==undefined)c[s]++});
+  const items=[["all","Все"],["pending","Ждут"],["approved","Одобрены"],["rejected","Отклонены"]];
+  const box=document.getElementById("filters");box.replaceChildren();
+  items.forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.id="f-"+k;
+    b.setAttribute("aria-pressed",String(filter===k));b.textContent=`${l} · ${c[k]}`;
+    b.onclick=()=>{filter=k;render()};box.append(b)});
+}
+
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+
+async function save(id,patch){
+  const p=posts.find(x=>x.id===id);Object.assign(p,patch);render();
+  if(!db||!canWrite)return;
+  const prev=busy.get(id)||Promise.resolve();
+  const next=prev.then(()=>db.doc("posts/"+id).update({...patch,updated_at:new Date().toISOString()})).catch(e=>{
+    if(e&&e.code==="invalid_argument"){canWrite=false;setNote("Сохранять изменения может только владелец или участник с правом редактирования.")}
+    else setNote("Не удалось сохранить, попробуйте ещё раз.")});
+  busy.set(id,next);await next;
+}
+
+function postCard(p){
+  const card=el("article","post");card.dataset.status=p.status;card.id="post-"+p.id;
+  const meta=el("div","meta");meta.append(el("span","time",p.time),el("span",null,p.theme));
+  meta.append(el("span","badge "+(p.status==="missed"?"rejected":p.status),STATUS[p.status]||p.status));
+  card.append(meta);
+  const locked=p.status==="published";
+  const shown=p.final_text||p.text;
+  if(editing.has(p.id)){
+    const ta=el("textarea","edit-area");ta.id="edit-"+p.id;ta.value=shown;
+    const cnt=el("div","count");const upd=()=>{cnt.textContent=ta.value.length+" / 500";cnt.classList.toggle("over",ta.value.length>500)};upd();
+    ta.oninput=upd;
+    const row=el("div","actions");
+    const ok=el("button","btn","Сохранить текст");ok.onclick=()=>{if(ta.value.length>500)return;editing.delete(p.id);
+      save(p.id,{final_text:ta.value.trim()===p.text.trim()?"":ta.value.trim()})};
+    const cancel=el("button","btn ghost","Отмена");cancel.onclick=()=>{editing.delete(p.id);render()};
+    row.append(ok,cancel);card.append(ta,cnt,row);
+  }else{
+    const t=el("p","text"+(p.final_text?" edited":""),shown);card.append(t);
+  }
+  const act=el("div","actions");
+  const a=el("button","btn ok","Одобрить");a.setAttribute("aria-pressed",String(p.status==="approved"));
+  a.onclick=()=>save(p.id,{status:p.status==="approved"?"pending":"approved"});
+  const r=el("button","btn no","Отклонить");r.setAttribute("aria-pressed",String(p.status==="rejected"));
+  r.onclick=()=>save(p.id,{status:p.status==="rejected"?"pending":"rejected"});
+  const e=el("button","btn ghost","Править");e.onclick=()=>{editing.add(p.id);render()};
+  [a,r,e].forEach(b=>b.disabled=locked||!canWrite);
+  act.append(a,r,e);card.append(act);
+  const c=el("textarea");c.id="comment-"+p.id;c.placeholder="Комментарий: что поправить или почему отклонили";c.value=p.comment||"";
+  c.rows=1;c.disabled=locked||!canWrite;
+  c.onchange=()=>{if(c.value!==(p.comment||""))save(p.id,{comment:c.value})};
+  card.append(c);
+  return card;
+}
+
+function render(){
+  renderFilters();
+  const feed=document.getElementById("feed");
+  const active=document.activeElement&&document.activeElement.id;
+  feed.replaceChildren();
+  const show=posts.filter(p=>filter==="all"||(filter==="approved"?["approved","published"].includes(p.status):p.status===filter));
+  if(!posts.length){feed.append(el("div","empty","Посты ещё не загружены. Как только Claude добавит черновики, они появятся здесь по дням."));return}
+  if(!show.length){feed.append(el("div","empty","В этом фильтре постов нет."));return}
+  const byDay={};show.forEach(p=>(byDay[p.day]??=[]).push(p));
+  Object.keys(byDay).sort().forEach(day=>{
+    const sec=el("section","day");const head=el("div","day-head");
+    const h=el("h2",null,dayLabel(day));const all=posts.filter(p=>p.day===day);
+    const th=el("span","theme",all[0].theme);
+    const left=el("div");left.append(h,th);
+    const bulk=el("button","link","Одобрить все ожидающие за день");bulk.disabled=!canWrite;
+    bulk.onclick=async()=>{for(const p of all.filter(p=>p.status==="pending"))await save(p.id,{status:"approved"})};
+    head.append(left,bulk);sec.append(head);
+    const list=el("div","list");byDay[day].sort((a,b)=>a.order-b.order).forEach(p=>list.append(postCard(p)));
+    sec.append(list);feed.append(sec);
+  });
+  if(active){const n=document.getElementById(active);if(n)n.focus()}
+}
+
+function setNote(t){document.getElementById("note").textContent=t}
+
+(async()=>{
+  render();
+  const timer=setTimeout(()=>{if(!posts.length)setNote("База не отвечает. Обновите страницу чуть позже.")},10000);
+  db=await window.claude?.use?.("db");
+  if(!db){clearTimeout(timer);setNote("Чтобы смотреть и одобрять посты, откройте страницу в claude.ai под своим аккаунтом.");return}
+  const user=await window.claude.use("user");
+  const w=user?await user.can("data.write"):null;
+  if(w===false)canWrite=false;
+  db.collection("posts").orderBy("order").onSnapshot(snap=>{
+    clearTimeout(timer);
+    posts=snap.docs.map(d=>({id:d.id,...d.data()}));
+    setNote(canWrite?"Одобрите или отклоните каждый пост. Комментарий сохраняется, когда вы уходите из поля. В отложку уходят только одобренные.":"Вы смотрите в режиме просмотра: менять статусы может владелец.");
+    if(!document.activeElement||document.activeElement.tagName!=="TEXTAREA")render();else renderFilters();
+  },err=>{clearTimeout(timer);setNote("Не получилось загрузить посты. Обновите страницу.")});
+})();
+</script>
