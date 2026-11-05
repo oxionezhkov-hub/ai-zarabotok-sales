@@ -67,3 +67,14 @@ description: Монтаж рилса «говорящая голова» из с
 
 ## Запуск после перезапуска контейнера
 Рабочая папка исчезает. Нужно: `pip install gdown faster-whisper`, скачать папку Диска `gdown --folder <ссылка>` (ссылка в `knowledge-base/zarabotok-na-ii/avtor.md`), модель Whisper small скачается сама. Для примера сайта нужен Node-пакет playwright (`NODE_PATH=$(npm root -g) node cap.js` в `tools/reels-edit/site-example/`). Google Диск как хранилище результата недоступен (нет коннектора): отдавать файл через SendUserFile.
+
+## Публикация через Telegram-бота (с 05.11.2026)
+
+Автор получает ролики в свой бот MyBrand (воркер `tasktracker`, репозиторий `oxionezhkov-hub/mybrand-smm`, PR #59) и согласует их там.
+
+- **Расписание:** три задачи Claude Code: 01:31, 11:31 и 18:31 МСК (к 02:00, 12:00, 19:00). Каждая берёт первый ролик «в очереди» из `knowledge-base/zarabotok-na-ii/reels-queue.md`.
+- **Отправка видео:** `python3 tools/reels-edit/tg_send.py video <файл> <reel_id> <version> "<название>" ["<что изменено>"]`. Нужна переменная окружения `REELS_API_TOKEN`. Видео больше 45 МБ скрипт пережимает сам. message_id из ответа записать в очередь.
+- **Ответы автора** приходят в эту сессию через задачу «Рилсы: ответы из Telegram-бота» как JSON `{"event":"feedback"|"approved","reel_id":..., "version":..., "text":...}`.
+  - `feedback`: внести правки, проверить, отправить `version+1` с коротким списком изменений в `note`.
+  - `approved`: обложка `tg_send.py photo <cover.jpg>`, затем два отдельных сообщения `tg_send.py copy "Описание" <file>` и `tg_send.py copy "Закреплённый комментарий" <file>`. Каждое приходит блоком `<pre>`, который в Telegram копируется одним касанием. Тексты сохранить в `reels.md`.
+- **Если токена нет или воркер не отвечает:** отправить файл через SendUserFile и написать, что сломалось.
