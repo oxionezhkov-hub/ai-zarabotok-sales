@@ -35,9 +35,21 @@ def publish_text(text):
     return post("me/threads_publish", {"creation_id": container})["id"]
 
 
+def check_token():
+    url = f"{API}/me?" + urllib.parse.urlencode({"fields": "id,username", "access_token": TOKEN})
+    try:
+        with urllib.request.urlopen(url, timeout=60) as r:
+            me = json.load(r)
+    except urllib.error.HTTPError as e:
+        sys.exit(f"Токен не принят Threads: HTTP {e.code} {e.read().decode(errors='replace')}")
+    print(f"Токен в порядке, аккаунт @{me.get('username')}")
+
+
 def main():
     if not TOKEN and not DRY_RUN:
         sys.exit("Нет секрета THREADS_TOKEN")
+    if not DRY_RUN:
+        check_token()
     now = dt.datetime.now(dt.timezone.utc)
     failed = 0
     for path in sorted(glob.glob("threads/queue/*.json")):
