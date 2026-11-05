@@ -2,55 +2,55 @@
  {
   "kind": "seq",
   "pattern": "cards/chat/%04d.png",
-  "start": 15.41,
+  "start": 13.97,
   "dur": 8.47,
-  "y": 40,
-  "w": 948
+  "y": -26,
+  "w": 1080
  },
  {
   "kind": "seq",
   "pattern": "cards/maps/%04d.png",
-  "start": 33.24,
-  "dur": 11.26,
-  "y": 40,
-  "w": 948
+  "start": 30.72,
+  "dur": 8.7,
+  "y": -26,
+  "w": 1080
  },
  {
   "kind": "broll",
   "pattern": "../build/scrollx/%04d.jpg",
-  "start": 44.6,
-  "dur": 4.6
+  "start": 40.29,
+  "dur": 4.54
  },
  {
   "kind": "seq",
   "pattern": "cards/steps/%04d.png",
-  "start": 49.15,
-  "dur": 5.68,
-  "y": 40,
-  "w": 948
+  "start": 44.69,
+  "dur": 5.88,
+  "y": -26,
+  "w": 1080
  },
  {
   "kind": "seq",
   "pattern": "cards/price/%04d.png",
-  "start": 55.44,
+  "start": 51.17,
   "dur": 3.55,
-  "y": 40,
-  "w": 808
+  "y": -16,
+  "w": 920
  },
  {
   "kind": "seq",
   "pattern": "cards/dm/%04d.png",
-  "start": 60.48,
-  "dur": 8.68,
-  "y": 40,
-  "w": 948
+  "start": 56.18,
+  "dur": 8.7,
+  "y": -26,
+  "w": 1080
  },
  {
   "kind": "seq",
   "pattern": "cards/cta/%04d.png",
-  "start": 72.6,
-  "dur": 3.7,
-  "y": 40,
-  "w": 948
+  "start": 67.22,
+  "dur": 4.147,
+  "y": -26,
+  "w": 1080
  }
 ]
