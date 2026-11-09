@@ -1,0 +1,21 @@
+name: "Instagram — передать токен воркеру"
+
+# Одноразово (и после выпуска нового токена): отправляет секрет INSTAGRAM_TOKEN
+# в воркер tasktracker. Воркер сохраняет его у себя и дальше продлевает сам.
+on:
+  workflow_dispatch:
+
+jobs:
+  handoff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Отправить токен в воркер
+        env:
+          INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+        run: |
+          code=$(curl -sS -o resp.json -w '%{http_code}' -X POST \
+            -H 'content-type: application/json' \
+            --data "$(jq -n --arg t "$INSTAGRAM_TOKEN" '{token: $t}')" \
+            https://tasktracker.oxion-ezhkov.workers.dev/instagram/token)
+          cat resp.json; echo
+          test "$code" = "200"
