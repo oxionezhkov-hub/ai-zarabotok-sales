@@ -4,6 +4,11 @@ name: "Instagram — передать токен воркеру"
 # в воркер tasktracker. Воркер сохраняет его у себя и дальше продлевает сам.
 on:
   workflow_dispatch:
+    inputs:
+      ig_user_id:
+        description: "ID аккаунта Instagram (цифры под ником при выпуске токена). Нужен для токенов EAA…/EAG…, можно оставить пустым"
+        required: false
+        default: ""
 
 jobs:
   handoff:
@@ -12,10 +17,11 @@ jobs:
       - name: Отправить токен в воркер
         env:
           INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+          IG_USER_ID: ${{ inputs.ig_user_id }}
         run: |
           code=$(curl -sS -o resp.json -w '%{http_code}' -X POST \
             -H 'content-type: application/json' \
-            --data "$(jq -n --arg t "$INSTAGRAM_TOKEN" '{token: $t}')" \
+            --data "$(jq -n --arg t "$INSTAGRAM_TOKEN" --arg i "$IG_USER_ID" '{token: $t, ig_user_id: $i}')" \
             https://tasktracker.oxion-ezhkov.workers.dev/instagram/token)
           cat resp.json; echo
           test "$code" = "200"
