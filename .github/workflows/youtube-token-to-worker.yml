@@ -1,0 +1,25 @@
+name: "YouTube — передать ключи воркеру"
+
+# Одноразово (и после выпуска нового refresh token): отправляет секреты
+# YT_CLIENT_ID, YT_CLIENT_SECRET и YT_REFRESH_TOKEN в воркер tasktracker.
+# Воркер проверяет их у Google и дальше сам получает access-токены.
+on:
+  workflow_dispatch:
+
+jobs:
+  handoff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Отправить ключи в воркер
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          code=$(curl -sS -o resp.json -w '%{http_code}' -X POST \
+            -H 'content-type: application/json' \
+            --data "$(jq -n --arg a "$YT_CLIENT_ID" --arg b "$YT_CLIENT_SECRET" --arg c "$YT_REFRESH_TOKEN" \
+              '{client_id: $a, client_secret: $b, refresh_token: $c}')" \
+            https://tasktracker.oxion-ezhkov.workers.dev/youtube/token)
+          cat resp.json; echo
+          test "$code" = "200"
