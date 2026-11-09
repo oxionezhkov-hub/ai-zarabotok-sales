@@ -1,0 +1,25 @@
+name: "TikTok — передать ключи воркеру"
+
+# Одноразово: отправляет секреты TIKTOK_CLIENT_KEY и TIKTOK_CLIENT_SECRET
+# (Client key / Client secret из Sandbox приложения в TikTok for Developers)
+# в воркер tasktracker. После этого откройте
+# https://tasktracker.oxion-ezhkov.workers.dev/tiktok/connect и войдите в TikTok.
+on:
+  workflow_dispatch:
+
+jobs:
+  handoff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Отправить ключи в воркер
+        env:
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+        run: |
+          code=$(curl -sS -o resp.json -w '%{http_code}' -X POST \
+            -H 'content-type: application/json' \
+            --data "$(jq -n --arg a "$TIKTOK_CLIENT_KEY" --arg b "$TIKTOK_CLIENT_SECRET" \
+              '{client_key: $a, client_secret: $b}')" \
+            https://tasktracker.oxion-ezhkov.workers.dev/tiktok/keys)
+          cat resp.json; echo
+          test "$code" = "200"
